@@ -1,7 +1,7 @@
 {
   "KPlugin": {
     "Name": "Life Calendar",
-    "Id": "com.x2d7.lifecalendar",
+    "Id": "lifecalendar-plasmoid",
     "Version": "1.0",
     "Description": "Visualize your year at a glance! A life-style calendar showing year progress day by day, theme-aware and interactive.",
     "Category": "Utilities",
