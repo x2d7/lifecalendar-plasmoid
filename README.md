@@ -15,17 +15,16 @@ Note that the plasmoid may experience significant lag when dragging (It's my fir
 - **Horizontal / Vertical** layouts  
 - **Vertical-heatmap** layout (week columns, 7 days per column)
 
----
+<div style="display: flex; flex-wrap: wrap; gap: 0; overflow-x: auto;">
+  <img src="./screenshots/3.png" width="400" style="display: block; flex: 0 0 auto;">
+  <img src="./screenshots/1.png" width="400" style="display: block; flex: 0 0 auto;">
+  <img src="./screenshots/2.png" width="800" style="display: block; flex: 0 0 auto; margin-top: 0;">
+</div>
 
-## Screenshots
 
-<table style="border: none; border-collapse: collapse;">
-  <tr>
-    <td><img src="./screenshots/3.png" width="400"></td>
-    <td><img src="./screenshots/1.png" width="400"></td>
-    <td><img src="./screenshots/2.png" width="400"></td>
-  </tr>
-</table>
+
+
+
 
 
 ---
