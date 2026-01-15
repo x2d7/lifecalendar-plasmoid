@@ -1,0 +1,40 @@
+{
+  "KPlugin": {
+    "Name": "Life Calendar",
+    "Id": "com.x2d7.lifecalendar",
+    "Version": "1.0",
+    "Description": "Visualize your year at a glance! A life-style calendar showing year progress day by day, theme-aware and interactive.",
+    "Category": "Utilities",
+    "Icon": "office-calendar",
+    "Tags": ["calendar", "productivity", "lifestyle", "year tracker", "time management", "plasma"],
+    "Website": "https://github.com/x2d7/lifecalendar-plasmoid",
+    "License": "GPL-3.0-or-later",
+    "Authors": [
+      {
+        "Name": "Cyrsia",
+        "Email": "cyrsiadv@gmail.com",
+        "Task": "Developer & Designer"
+      }
+    ],
+    "Maintainers": [
+      {
+        "Name": "Cyrsia",
+        "Email": "cyrsiadv@gmail.com"
+      }
+    ],
+    "TranslatedName": {
+      "en": "Life Calendar",
+      "ru": "Календарь Жизни"
+    },
+    "TranslatedDescription": {
+      "en": "Visualize your year at a glance! A life-style calendar showing year progress day by day, theme-aware and interactive.",
+      "ru": "Визуализируйте свой год! Календарь жизни, показывающий прогресс года по дням, с поддержкой темы и интерактивностью."
+    }
+  },
+  "KPackageStructure": "Plasma/Applet",
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-ConfigUI": "contents/ui/config.qml",
+  "X-Plasma-ContentRating": "Everyone",
+  "X-Plasma-Dependencies": [],
+  "X-Plasma-Provides": ["plasmoid", "calendar", "year-progress", "lifestyle-tool"]
+}
