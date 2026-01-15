@@ -6,4 +6,8 @@
         <default>14</default>
     </entry>
 
+    <entry name="orientation" type="String">
+        <default>horizontal</default>
+    </entry>
+
 </kcfg>

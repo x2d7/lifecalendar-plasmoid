@@ -23,8 +23,8 @@ PlasmoidItem {
     property real availableWidth: root.width - 2 * margin
     property real availableHeight: root.height - 2 * margin
 
-    property int gridColumns: Math.max(1, Math.ceil(Math.sqrt(totalDays * (availableWidth / availableHeight))))
-    property int gridRows: Math.ceil(totalDays / gridColumns)
+    property int gridColumns: orientation === "vertical-heatmap" ? 53 : Math.max(1, Math.ceil(Math.sqrt(totalDays * (availableWidth / availableHeight))))
+    property int gridRows: orientation === "vertical-heatmap" ? 7 : Math.ceil(totalDays / gridColumns)
 
     property real cellSize: Math.min(
         maxSquare,
@@ -43,6 +43,7 @@ PlasmoidItem {
             if (plasmoid.configuration.maxSquare !== undefined && plasmoid.configuration.maxSquare !== null) {
                 maxSquare = parseInt(plasmoid.configuration.maxSquare) || maxSquare
             }
+            if (plasmoid.configuration.orientation) orientation = plasmoid.configuration.orientation
         }
     }
 
@@ -51,6 +52,11 @@ PlasmoidItem {
         onMaxSquareChanged: {
             if (plasmoid && plasmoid.configuration && plasmoid.configuration.maxSquare !== undefined) {
                 maxSquare = parseInt(plasmoid.configuration.maxSquare) || maxSquare
+            }
+        }
+        onOrientationChanged: {
+            if (plasmoid && plasmoid.configuration && plasmoid.configuration.orientation !== undefined) {
+                orientation = plasmoid.configuration.orientation
             }
         }
     }
@@ -91,15 +97,23 @@ PlasmoidItem {
                             delegate: Rectangle {
                                 property int dayNumber: index + 1
 
-                                readonly property int cellRow: Math.floor((dayNumber - 1) / gridColumns)
-                                readonly property int cellCol: (dayNumber - 1) % gridColumns
+                                readonly property int cellRow: orientation === "vertical-heatmap" ? dayOfWeek(dayNumber) : Math.floor((dayNumber - 1) / gridColumns)
+                                readonly property int cellCol: orientation === "vertical-heatmap" ? weekOfYear(dayNumber) : (dayNumber - 1) % gridColumns
 
                                 width: cellSize
                                 height: cellSize
                                 x: cellCol * (cellSize + gap)
                                 y: cellRow * (cellSize + gap)
                                 radius: Math.max(1, Math.floor(cellSize * 0.15))
-                                property bool passed: (cellRow * gridColumns + cellCol + 1) <= todayIndex
+                                property bool passed: {
+                                    if (orientation === "vertical-heatmap") {
+                                        return dayNumber <= todayIndex
+                                    } else if (orientation === "vertical") {
+                                        return (cellCol * gridRows + cellRow + 1) <= todayIndex
+                                    } else {
+                                        return (cellRow * gridColumns + cellCol + 1) <= todayIndex
+                                    }
+                                }
                                 color: passed ? filledColor : emptyColor
                                 border.width: 0
                                 border.color: "transparent"
@@ -119,5 +133,18 @@ PlasmoidItem {
     function daysInYear() {
         const y = (new Date()).getFullYear()
         return ((y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0)) ? 366 : 365
+    }
+    function dayOfWeek(dayNumber) {
+        const year = (new Date()).getFullYear()
+        const date = new Date(year, 0, dayNumber)
+        return date.getDay()
+    }
+    function weekOfYear(dayNumber) {
+        const year = (new Date()).getFullYear()
+        const date = new Date(year, 0, dayNumber)
+        const firstDayOfYear = new Date(year, 0, 1)
+        const firstDayOfWeek = firstDayOfYear.getDay()
+        const daysSinceFirstSunday = (dayNumber - 1 + firstDayOfWeek) % 7
+        return Math.floor((dayNumber - 1 + firstDayOfWeek) / 7)
     }
 }

@@ -9,6 +9,7 @@ Kirigami.Page {
     title: qsTr("General")
 
     property var cfg_maxSquare
+    property var cfg_orientation
 
     Kirigami.FormLayout {
         anchors.fill: parent
@@ -25,6 +26,26 @@ Kirigami.Page {
 
             onValueModified: {
                 plasmoid.configuration.maxSquare = value
+            }
+        }
+
+        ComboBox {
+            Kirigami.FormData.label: qsTr("Orientation")
+            model: [
+                { text: qsTr("Horizontal"), value: "horizontal" },
+                { text: qsTr("Vertical"), value: "vertical" },
+                { text: qsTr("Vertical (GitHub style)"), value: "vertical-heatmap" }
+            ]
+            textRole: "text"
+            valueRole: "value"
+
+            currentIndex: {
+                const currentValue = plasmoid.configuration.orientation || "horizontal"
+                return model.findIndex(item => item.value === currentValue)
+            }
+
+            onActivated: {
+                plasmoid.configuration.orientation = model[currentIndex].value
             }
         }
     }
