@@ -15,6 +15,21 @@ Kirigami.Page {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
 
+        ComboBox {
+            Kirigami.FormData.label: qsTr("Orientation")
+            model: ["horizontal", "vertical", "vertical-heatmap"]
+
+            currentIndex: {
+                if (plasmoid.configuration.orientation === "vertical") return 1
+                if (plasmoid.configuration.orientation === "vertical-heatmap") return 2
+                return 0
+            }
+
+            onActivated: {
+                plasmoid.configuration.orientation = currentText
+            }
+        }
+
         SpinBox {
             Kirigami.FormData.label: qsTr("Max square size")
             from: 6
@@ -26,26 +41,6 @@ Kirigami.Page {
 
             onValueModified: {
                 plasmoid.configuration.maxSquare = value
-            }
-        }
-
-        ComboBox {
-            Kirigami.FormData.label: qsTr("Orientation")
-            model: [
-                { text: qsTr("Horizontal"), value: "horizontal" },
-                { text: qsTr("Vertical"), value: "vertical" },
-                { text: qsTr("Vertical (GitHub style)"), value: "vertical-heatmap" }
-            ]
-            textRole: "text"
-            valueRole: "value"
-
-            currentIndex: {
-                const currentValue = plasmoid.configuration.orientation || "horizontal"
-                return model.findIndex(item => item.value === currentValue)
-            }
-
-            onActivated: {
-                plasmoid.configuration.orientation = model[currentIndex].value
             }
         }
     }
