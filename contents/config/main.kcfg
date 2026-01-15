@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg name="main"
+      xmlns="http://www.kde.org/standards/kcfg/1.0">
+
+    <entry name="squareSize" type="Int">
+        <default>100</default>
+    </entry>
+
+</kcfg>
