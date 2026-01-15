@@ -1,6 +1,12 @@
 # Life Calendar Plasmoid
 
-A simple year-progress visual calendar for KDE Plasma. Shows passed days of the year as squares in a grid.  
+A simple year-progress visual calendar for KDE Plasma. Shows passed days of the year as squares in a grid.
+
+---
+
+## Disclaimer
+
+Note that the plasmoid may experience significant lag when dragging (It's my first plasmoid SORRY! Contribute if you can!)
 
 ---
 
@@ -45,4 +51,3 @@ A simple year-progress visual calendar for KDE Plasma. Shows passed days of the 
 - Colors follow your Plasma theme  
 
 ---
-
