@@ -2,8 +2,8 @@
 <kcfg name="main"
       xmlns="http://www.kde.org/standards/kcfg/1.0">
 
-    <entry name="squareSize" type="Int">
-        <default>100</default>
+    <entry name="maxSquare" type="Int">
+        <default>14</default>
     </entry>
 
 </kcfg>

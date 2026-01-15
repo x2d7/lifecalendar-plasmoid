@@ -8,23 +8,23 @@ Kirigami.Page {
     id: page
     title: qsTr("General")
 
-    property var cfg_squareSize
+    property var cfg_maxSquare
 
     Kirigami.FormLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
 
         SpinBox {
-            Kirigami.FormData.label: qsTr("Square size")
-            from: 50
-            to: 200
+            Kirigami.FormData.label: qsTr("Max square size")
+            from: 6
+            to: 64
 
-            value: plasmoid.configuration.squareSize > 0
-                   ? plasmoid.configuration.squareSize
-                   : 100
+            value: plasmoid.configuration.maxSquare > 0
+                   ? plasmoid.configuration.maxSquare
+                   : 14
 
             onValueModified: {
-                plasmoid.configuration.squareSize = value
+                plasmoid.configuration.maxSquare = value
             }
         }
     }
