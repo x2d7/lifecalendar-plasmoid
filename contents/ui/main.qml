@@ -4,19 +4,21 @@ import QtQuick.Controls 2.15
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.plasmoid 2.0
-import "utils.js" as Utils
+import "js/utils.js" as Utils
+import "js/constants.js" as Constants
+import "js/themeManager.js" as ThemeManager
 
 PlasmoidItem {
     id: root
     width: 440
     height: 140
 
-    property int margin: 6
-    property int gap: 2
+    property int margin: Constants.DEFAULT_MARGIN
+    property int gap: Constants.DEFAULT_GAP
     property int percentAreaHeight: 22
 
-    property string orientation: "horizontal"
-    property int maxSquare: 14
+    property string orientation: Constants.ORIENTATIONS.HORIZONTAL
+    property int maxSquare: Constants.DEFAULT_MAX_SQUARE
 
     property int totalDays: Utils.daysInYear()
     property int todayIndex: Utils.dayOfYear()
@@ -24,8 +26,8 @@ PlasmoidItem {
     property real availableWidth: root.width - 2 * margin
     property real availableHeight: root.height - 2 * margin
 
-    property int gridColumns: orientation === "vertical-heatmap" ? 53 : Math.max(1, Math.ceil(Math.sqrt(totalDays * (availableWidth / availableHeight))))
-    property int gridRows: orientation === "vertical-heatmap" ? 7 : Math.ceil(totalDays / gridColumns)
+    property int gridColumns: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? 53 : Math.max(1, Math.ceil(Math.sqrt(totalDays * (availableWidth / availableHeight))))
+    property int gridRows: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? 7 : Math.ceil(totalDays / gridColumns)
 
     property real cellSize: Math.min(
         maxSquare,
@@ -33,11 +35,11 @@ PlasmoidItem {
         (availableHeight - (gridRows - 1) * gap) / gridRows
     )
 
-    property color filledColor: (PlasmaCore.Theme && PlasmaCore.Theme.highlightColor) ? PlasmaCore.Theme.highlightColor : "#3daee9"
-    property color emptyColor: (PlasmaCore.Theme && PlasmaCore.Theme.midColor) ? PlasmaCore.Theme.midColor : "#bfbfbf"
-    property color todayBorder: (PlasmaCore.Theme && PlasmaCore.Theme.highlightColor) ? PlasmaCore.Theme.highlightColor : "#3daee9"
-    property color bgColor: (PlasmaCore.Theme && PlasmaCore.Theme.backgroundColor) ? PlasmaCore.Theme.backgroundColor : "transparent"
-    property color textColor: (PlasmaCore.Theme && PlasmaCore.Theme.textColor) ? PlasmaCore.Theme.textColor : "#ffffff"
+    property color filledColor: ThemeManager.getFilledColor(PlasmaCore.Theme)
+    property color emptyColor: ThemeManager.getEmptyColor(PlasmaCore.Theme)
+    property color todayBorder: ThemeManager.getTodayBorder(PlasmaCore.Theme)
+    property color bgColor: ThemeManager.getBackground(PlasmaCore.Theme)
+    property color textColor: ThemeManager.getTextColor(PlasmaCore.Theme)
 
     Component.onCompleted: {
         if (plasmoid && plasmoid.configuration) {
@@ -98,8 +100,8 @@ PlasmoidItem {
                             delegate: Rectangle {
                                 property int dayNumber: index + 1
 
-                                readonly property int cellRow: orientation === "vertical-heatmap" ? Utils.dayOfWeek(dayNumber) : Math.floor((dayNumber - 1) / gridColumns)
-                                readonly property int cellCol: orientation === "vertical-heatmap" ? Utils.weekOfYear(dayNumber) : (dayNumber - 1) % gridColumns
+                                readonly property int cellRow: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? Utils.dayOfWeek(dayNumber) : Math.floor((dayNumber - 1) / gridColumns)
+                                readonly property int cellCol: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? Utils.weekOfYear(dayNumber) : (dayNumber - 1) % gridColumns
 
                                 width: cellSize
                                 height: cellSize
@@ -107,9 +109,9 @@ PlasmoidItem {
                                 y: cellRow * (cellSize + gap)
                                 radius: Math.max(1, Math.floor(cellSize * 0.15))
                                 property bool passed: {
-                                    if (orientation === "vertical-heatmap") {
+                                    if (orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP) {
                                         return dayNumber <= todayIndex
-                                    } else if (orientation === "vertical") {
+                                    } else if (orientation === Constants.ORIENTATIONS.VERTICAL) {
                                         return (cellCol * gridRows + cellRow + 1) <= todayIndex
                                     } else {
                                         return (cellRow * gridColumns + cellCol + 1) <= todayIndex
