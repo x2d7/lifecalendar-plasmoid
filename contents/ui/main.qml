@@ -12,8 +12,8 @@ import "js/ConfigHandler.js" as ConfigHandler
 
 PlasmoidItem {
     id: root
-    width: 440
-    height: 140
+    width: Constants.DEFAULT_WIDTH
+    height: Constants.DEFAULT_HEIGHT
 
     property int margin: Constants.DEFAULT_MARGIN
     property int gap: Constants.DEFAULT_GAP
@@ -21,6 +21,17 @@ PlasmoidItem {
 
     property string orientation: Constants.ORIENTATIONS.HORIZONTAL
     property int maxSquare: Constants.DEFAULT_MAX_SQUARE
+
+    property int backgroundRadius: Constants.DEFAULT_BACKGROUND_RADIUS
+    property real cellRadiusFactor: Constants.DEFAULT_CELL_RADIUS_FACTOR
+    property int cellBorderWidth: Constants.DEFAULT_CELL_BORDER_WIDTH
+    property int updateInterval: Constants.UPDATE_INTERVALS.DAILY
+
+    property bool useCustomColors: false
+    property color filledColor: ThemeManager.getFilledColor(PlasmaCore.Theme)
+    property color emptyColor: ThemeManager.getEmptyColor(PlasmaCore.Theme)
+    property color todayBorderColor: ThemeManager.getTodayBorder(PlasmaCore.Theme)
+    property color bgColor: ThemeManager.getBackground(PlasmaCore.Theme)
 
     property int updateTrigger: 0
     property int totalDays: { updateTrigger; MainModel.daysInYear() }
@@ -34,34 +45,48 @@ PlasmoidItem {
 
     property real cellSize: GridCalculator.calculateCellSize(availableWidth, availableHeight, gridColumns, gridRows, gap, maxSquare)
 
-    property color filledColor: ThemeManager.getFilledColor(PlasmaCore.Theme)
-    property color emptyColor: ThemeManager.getEmptyColor(PlasmaCore.Theme)
-    property color todayBorder: ThemeManager.getTodayBorder(PlasmaCore.Theme)
-    property color bgColor: ThemeManager.getBackground(PlasmaCore.Theme)
-    property color textColor: ThemeManager.getTextColor(PlasmaCore.Theme)
+    onUseCustomColorsChanged: updateColors()
+    onWidthChanged: plasmoid.configuration.width = width
+    onHeightChanged: plasmoid.configuration.height = height
+
+    function updateColors() {
+        filledColor = ThemeManager.getFilledColor(PlasmaCore.Theme, plasmoid.configuration.filledColor, useCustomColors)
+        emptyColor = ThemeManager.getEmptyColor(PlasmaCore.Theme, plasmoid.configuration.emptyColor, useCustomColors)
+        todayBorderColor = ThemeManager.getTodayBorder(PlasmaCore.Theme, plasmoid.configuration.todayBorderColor, useCustomColors)
+        bgColor = ThemeManager.getBackground(PlasmaCore.Theme, plasmoid.configuration.backgroundColor, useCustomColors)
+    }
 
     Component.onCompleted: {
         ConfigHandler.initializeConfig(root, plasmoid, Constants)
+        updateColors()
     }
 
     Connections {
         target: plasmoid.configuration
         onMaxSquareChanged: ConfigHandler.updateMaxSquare(root, plasmoid, Constants)
         onOrientationChanged: ConfigHandler.updateOrientation(root, plasmoid, Constants)
+        onWidthChanged: ConfigHandler.updateWidth(root, plasmoid, Constants)
+        onHeightChanged: ConfigHandler.updateHeight(root, plasmoid, Constants)
+        onMarginChanged: ConfigHandler.updateMargin(root, plasmoid, Constants)
+        onGapChanged: ConfigHandler.updateGap(root, plasmoid, Constants)
+        onBackgroundRadiusChanged: ConfigHandler.updateBackgroundRadius(root, plasmoid, Constants)
+        onCellRadiusFactorChanged: ConfigHandler.updateCellRadiusFactor(root, plasmoid, Constants)
+        onCellBorderWidthChanged: ConfigHandler.updateCellBorderWidth(root, plasmoid, Constants)
+        onUpdateIntervalChanged: ConfigHandler.updateUpdateInterval(root, plasmoid, Constants)
+        onUseCustomColorsChanged: ConfigHandler.updateUseCustomColors(root, plasmoid, Constants)
+        onFilledColorChanged: updateColors()
+        onEmptyColorChanged: updateColors()
+        onTodayBorderColorChanged: updateColors()
+        onBackgroundColorChanged: updateColors()
     }
 
     Timer {
-        id: dailyUpdateTimer
+        id: updateTimer
         repeat: true
         running: true
-        interval: {
-            var now = new Date();
-            var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
-            return midnight - now;
-        }
+        interval: updateInterval
         onTriggered: {
             updateTrigger++
-            interval = 24 * 60 * 60 * 1000;
         }
     }
 
@@ -71,7 +96,7 @@ PlasmoidItem {
         Rectangle {
             anchors.fill: parent
             color: bgColor
-            radius: 4
+            radius: backgroundRadius
 
             ColumnLayout {
                 anchors.fill: parent
@@ -108,11 +133,12 @@ PlasmoidItem {
                                 height: cellSize
                                 x: cellCol * (cellSize + gap)
                                 y: cellRow * (cellSize + gap)
-                                radius: Math.max(1, Math.floor(cellSize * 0.15))
+                                radius: Math.max(1, Math.floor(cellSize * cellRadiusFactor))
                                 property bool passed: GridCalculator.isDayPassed(dayNumber, todayIndex, orientation, cellRow, cellCol, gridRows, gridColumns, Constants)
+                                property bool isToday: dayNumber === todayIndex
                                 color: passed ? filledColor : emptyColor
-                                border.width: 0
-                                border.color: "transparent"
+                                border.width: cellBorderWidth
+                                border.color: isToday ? todayBorderColor : "transparent"
                             }
                         }
                     }
