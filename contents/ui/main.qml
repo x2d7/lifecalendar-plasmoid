@@ -137,14 +137,12 @@ PlasmoidItem {
     function dayOfWeek(dayNumber) {
         const year = (new Date()).getFullYear()
         const date = new Date(year, 0, dayNumber)
-        return date.getDay()
+        return (date.getDay() + 6) % 7
     }
     function weekOfYear(dayNumber) {
         const year = (new Date()).getFullYear()
-        const date = new Date(year, 0, dayNumber)
-        const firstDayOfYear = new Date(year, 0, 1)
-        const firstDayOfWeek = firstDayOfYear.getDay()
-        const daysSinceFirstSunday = (dayNumber - 1 + firstDayOfWeek) % 7
-        return Math.floor((dayNumber - 1 + firstDayOfWeek) / 7)
+        const jan1 = new Date(year, 0, 1)
+        const jan1Iso = (jan1.getDay() + 6) % 7 
+        return Math.floor((dayNumber - 1 + jan1Iso) / 7)
     }
 }
