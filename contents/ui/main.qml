@@ -7,6 +7,8 @@ import org.kde.plasma.plasmoid 2.0
 import "js/MainModel.js" as MainModel
 import "js/constants.js" as Constants
 import "js/themeManager.js" as ThemeManager
+import "js/GridCalculator.js" as GridCalculator
+import "js/ConfigHandler.js" as ConfigHandler
 
 PlasmoidItem {
     id: root
@@ -26,14 +28,10 @@ PlasmoidItem {
     property real availableWidth: root.width - 2 * margin
     property real availableHeight: root.height - 2 * margin
 
-    property int gridColumns: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? 53 : Math.max(1, Math.ceil(Math.sqrt(totalDays * (availableWidth / availableHeight))))
-    property int gridRows: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? 7 : Math.ceil(totalDays / gridColumns)
+    property int gridColumns: GridCalculator.calculateGridColumns(totalDays, availableWidth, availableHeight, orientation, Constants)
+    property int gridRows: GridCalculator.calculateGridRows(totalDays, gridColumns, orientation, Constants)
 
-    property real cellSize: Math.min(
-        maxSquare,
-        (availableWidth - (gridColumns - 1) * gap) / gridColumns,
-        (availableHeight - (gridRows - 1) * gap) / gridRows
-    )
+    property real cellSize: GridCalculator.calculateCellSize(availableWidth, availableHeight, gridColumns, gridRows, gap, maxSquare)
 
     property color filledColor: ThemeManager.getFilledColor(PlasmaCore.Theme)
     property color emptyColor: ThemeManager.getEmptyColor(PlasmaCore.Theme)
@@ -42,26 +40,13 @@ PlasmoidItem {
     property color textColor: ThemeManager.getTextColor(PlasmaCore.Theme)
 
     Component.onCompleted: {
-        if (plasmoid && plasmoid.configuration) {
-            if (plasmoid.configuration.maxSquare !== undefined && plasmoid.configuration.maxSquare !== null) {
-                maxSquare = parseInt(plasmoid.configuration.maxSquare) || maxSquare
-            }
-            if (plasmoid.configuration.orientation) orientation = plasmoid.configuration.orientation
-        }
+        ConfigHandler.initializeConfig(root, plasmoid, Constants)
     }
 
     Connections {
         target: plasmoid.configuration
-        onMaxSquareChanged: {
-            if (plasmoid && plasmoid.configuration && plasmoid.configuration.maxSquare !== undefined) {
-                maxSquare = parseInt(plasmoid.configuration.maxSquare) || maxSquare
-            }
-        }
-        onOrientationChanged: {
-            if (plasmoid && plasmoid.configuration && plasmoid.configuration.orientation !== undefined) {
-                orientation = plasmoid.configuration.orientation
-            }
-        }
+        onMaxSquareChanged: ConfigHandler.updateMaxSquare(root, plasmoid, Constants)
+        onOrientationChanged: ConfigHandler.updateOrientation(root, plasmoid, Constants)
     }
 
     fullRepresentation: Item {
@@ -100,23 +85,15 @@ PlasmoidItem {
                             delegate: Rectangle {
                                 property int dayNumber: index + 1
 
-                                readonly property int cellRow: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? MainModel.dayOfWeek(dayNumber) : Math.floor((dayNumber - 1) / gridColumns)
-                                readonly property int cellCol: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? MainModel.weekOfYear(dayNumber) : (dayNumber - 1) % gridColumns
+                                readonly property int cellRow: GridCalculator.getCellRow(dayNumber, gridColumns, orientation, Constants, MainModel)
+                                readonly property int cellCol: GridCalculator.getCellCol(dayNumber, gridColumns, orientation, Constants, MainModel)
 
                                 width: cellSize
                                 height: cellSize
                                 x: cellCol * (cellSize + gap)
                                 y: cellRow * (cellSize + gap)
                                 radius: Math.max(1, Math.floor(cellSize * 0.15))
-                                property bool passed: {
-                                    if (orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP) {
-                                        return dayNumber <= todayIndex
-                                    } else if (orientation === Constants.ORIENTATIONS.VERTICAL) {
-                                        return (cellCol * gridRows + cellRow + 1) <= todayIndex
-                                    } else {
-                                        return (cellRow * gridColumns + cellCol + 1) <= todayIndex
-                                    }
-                                }
+                                property bool passed: GridCalculator.isDayPassed(dayNumber, todayIndex, orientation, cellRow, cellCol, gridRows, gridColumns, Constants)
                                 color: passed ? filledColor : emptyColor
                                 border.width: 0
                                 border.color: "transparent"
