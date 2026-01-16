@@ -22,8 +22,9 @@ PlasmoidItem {
     property string orientation: Constants.ORIENTATIONS.HORIZONTAL
     property int maxSquare: Constants.DEFAULT_MAX_SQUARE
 
-    property int totalDays: MainModel.daysInYear()
-    property int todayIndex: MainModel.dayOfYear()
+    property int updateTrigger: 0
+    property int totalDays: { updateTrigger; MainModel.daysInYear() }
+    property int todayIndex: { updateTrigger; MainModel.dayOfYear() }
 
     property real availableWidth: root.width - 2 * margin
     property real availableHeight: root.height - 2 * margin
@@ -47,6 +48,21 @@ PlasmoidItem {
         target: plasmoid.configuration
         onMaxSquareChanged: ConfigHandler.updateMaxSquare(root, plasmoid, Constants)
         onOrientationChanged: ConfigHandler.updateOrientation(root, plasmoid, Constants)
+    }
+
+    Timer {
+        id: dailyUpdateTimer
+        repeat: true
+        running: true
+        interval: {
+            var now = new Date();
+            var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
+            return midnight - now;
+        }
+        onTriggered: {
+            updateTrigger++
+            interval = 24 * 60 * 60 * 1000;
+        }
     }
 
     fullRepresentation: Item {
