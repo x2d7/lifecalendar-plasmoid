@@ -4,7 +4,7 @@ import QtQuick.Controls 2.15
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.plasmoid 2.0
-import "js/utils.js" as Utils
+import "js/MainModel.js" as MainModel
 import "js/constants.js" as Constants
 import "js/themeManager.js" as ThemeManager
 
@@ -20,8 +20,8 @@ PlasmoidItem {
     property string orientation: Constants.ORIENTATIONS.HORIZONTAL
     property int maxSquare: Constants.DEFAULT_MAX_SQUARE
 
-    property int totalDays: Utils.daysInYear()
-    property int todayIndex: Utils.dayOfYear()
+    property int totalDays: MainModel.daysInYear()
+    property int todayIndex: MainModel.dayOfYear()
 
     property real availableWidth: root.width - 2 * margin
     property real availableHeight: root.height - 2 * margin
@@ -100,8 +100,8 @@ PlasmoidItem {
                             delegate: Rectangle {
                                 property int dayNumber: index + 1
 
-                                readonly property int cellRow: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? Utils.dayOfWeek(dayNumber) : Math.floor((dayNumber - 1) / gridColumns)
-                                readonly property int cellCol: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? Utils.weekOfYear(dayNumber) : (dayNumber - 1) % gridColumns
+                                readonly property int cellRow: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? MainModel.dayOfWeek(dayNumber) : Math.floor((dayNumber - 1) / gridColumns)
+                                readonly property int cellCol: orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP ? MainModel.weekOfYear(dayNumber) : (dayNumber - 1) % gridColumns
 
                                 width: cellSize
                                 height: cellSize
