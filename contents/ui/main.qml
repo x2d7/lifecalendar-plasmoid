@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.plasmoid 2.0
+import "utils.js" as Utils
 
 PlasmoidItem {
     id: root
@@ -17,8 +18,8 @@ PlasmoidItem {
     property string orientation: "horizontal"
     property int maxSquare: 14
 
-    property int totalDays: daysInYear()
-    property int todayIndex: dayOfYear()
+    property int totalDays: Utils.daysInYear()
+    property int todayIndex: Utils.dayOfYear()
 
     property real availableWidth: root.width - 2 * margin
     property real availableHeight: root.height - 2 * margin
@@ -97,8 +98,8 @@ PlasmoidItem {
                             delegate: Rectangle {
                                 property int dayNumber: index + 1
 
-                                readonly property int cellRow: orientation === "vertical-heatmap" ? dayOfWeek(dayNumber) : Math.floor((dayNumber - 1) / gridColumns)
-                                readonly property int cellCol: orientation === "vertical-heatmap" ? weekOfYear(dayNumber) : (dayNumber - 1) % gridColumns
+                                readonly property int cellRow: orientation === "vertical-heatmap" ? Utils.dayOfWeek(dayNumber) : Math.floor((dayNumber - 1) / gridColumns)
+                                readonly property int cellCol: orientation === "vertical-heatmap" ? Utils.weekOfYear(dayNumber) : (dayNumber - 1) % gridColumns
 
                                 width: cellSize
                                 height: cellSize
@@ -125,24 +126,5 @@ PlasmoidItem {
         }
     }
 
-    function dayOfYear() {
-        const now = new Date()
-        const start = new Date(now.getFullYear(),0,1)
-        return Math.floor((now - start) / (1000*60*60*24)) + 1
-    }
-    function daysInYear() {
-        const y = (new Date()).getFullYear()
-        return ((y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0)) ? 366 : 365
-    }
-    function dayOfWeek(dayNumber) {
-        const year = (new Date()).getFullYear()
-        const date = new Date(year, 0, dayNumber)
-        return (date.getDay() + 6) % 7
-    }
-    function weekOfYear(dayNumber) {
-        const year = (new Date()).getFullYear()
-        const jan1 = new Date(year, 0, 1)
-        const jan1Iso = (jan1.getDay() + 6) % 7 
-        return Math.floor((dayNumber - 1 + jan1Iso) / 7)
-    }
+
 }
