@@ -9,39 +9,44 @@ Kirigami.Page {
     id: page
     title: qsTr("General")
 
-    property var cfg_maxSquare
-    property var cfg_orientation
+    property int cfg_maxSquare: Constants.DEFAULT_MAX_SQUARE
+    property string cfg_orientation: Constants.ORIENTATIONS.HORIZONTAL
+    property int cfg_maxSquareDefault: Constants.DEFAULT_MAX_SQUARE
+    property string cfg_orientationDefault: Constants.ORIENTATIONS.HORIZONTAL
 
     Kirigami.FormLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
 
         ComboBox {
+            id: orientationCombo
             Kirigami.FormData.label: qsTr("Orientation")
             model: Object.values(Constants.ORIENTATIONS)
 
-            currentIndex: {
-                if (plasmoid.configuration.orientation === Constants.ORIENTATIONS.VERTICAL) return 1
-                if (plasmoid.configuration.orientation === Constants.ORIENTATIONS.VERTICAL_HEATMAP) return 2
-                return 0
+            Component.onCompleted: {
+                currentIndex = model.indexOf(cfg_orientation)
             }
 
             onActivated: {
-                plasmoid.configuration.orientation = currentText
+                var newVal = model[currentIndex]
+                plasmoid.configuration.orientation = newVal
+                cfg_orientation = newVal
             }
         }
 
         SpinBox {
+            id: maxSquareSpin
             Kirigami.FormData.label: qsTr("Max square size")
             from: Constants.MIN_SQUARE
             to: Constants.MAX_SQUARE
 
-            value: plasmoid.configuration.maxSquare > 0
-                   ? plasmoid.configuration.maxSquare
-                   : Constants.DEFAULT_MAX_SQUARE
+            Component.onCompleted: {
+                value = cfg_maxSquare
+            }
 
             onValueModified: {
                 plasmoid.configuration.maxSquare = value
+                cfg_maxSquare = value
             }
         }
     }
