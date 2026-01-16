@@ -3,44 +3,50 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.20 as Kirigami
 import org.kde.plasma.plasmoid 2.0
+import "js/constants.js" as Constants
 
 Kirigami.Page {
     id: page
     title: qsTr("General")
 
-    property var cfg_maxSquare
-    property var cfg_orientation
+    property int cfg_maxSquare: Constants.DEFAULT_MAX_SQUARE
+    property string cfg_orientation: Constants.ORIENTATIONS.HORIZONTAL
+    property int cfg_maxSquareDefault: Constants.DEFAULT_MAX_SQUARE
+    property string cfg_orientationDefault: Constants.ORIENTATIONS.HORIZONTAL
 
     Kirigami.FormLayout {
         anchors.fill: parent
         anchors.margins: Kirigami.Units.largeSpacing
 
         ComboBox {
+            id: orientationCombo
             Kirigami.FormData.label: qsTr("Orientation")
-            model: ["horizontal", "vertical", "vertical-heatmap"]
+            model: Object.values(Constants.ORIENTATIONS)
 
-            currentIndex: {
-                if (plasmoid.configuration.orientation === "vertical") return 1
-                if (plasmoid.configuration.orientation === "vertical-heatmap") return 2
-                return 0
+            Component.onCompleted: {
+                currentIndex = model.indexOf(cfg_orientation)
             }
 
             onActivated: {
-                plasmoid.configuration.orientation = currentText
+                var newVal = model[currentIndex]
+                plasmoid.configuration.orientation = newVal
+                cfg_orientation = newVal
             }
         }
 
         SpinBox {
+            id: maxSquareSpin
             Kirigami.FormData.label: qsTr("Max square size")
-            from: 6
-            to: 64
+            from: Constants.MIN_SQUARE
+            to: Constants.MAX_SQUARE
 
-            value: plasmoid.configuration.maxSquare > 0
-                   ? plasmoid.configuration.maxSquare
-                   : 14
+            Component.onCompleted: {
+                value = cfg_maxSquare
+            }
 
             onValueModified: {
                 plasmoid.configuration.maxSquare = value
+                cfg_maxSquare = value
             }
         }
     }
