@@ -18,13 +18,15 @@ function calculateCellSize(availableWidth, availableHeight, gridColumns, gridRow
     );
 }
 
-function getCellRow(dayNumber, gridColumns, orientation, constants, mainModel) {
+function getCellRow(dayNumber, gridColumns, gridRows, orientation, constants, mainModel) {
     if (orientation === constants.ORIENTATIONS.VERTICAL_HEATMAP) return mainModel.dayOfWeek(dayNumber);
+    if (orientation === constants.ORIENTATIONS.VERTICAL) return (dayNumber - 1) % gridRows;
     return Math.floor((dayNumber - 1) / gridColumns);
 }
 
-function getCellCol(dayNumber, gridColumns, orientation, constants, mainModel) {
+function getCellCol(dayNumber, gridColumns, gridRows, orientation, constants, mainModel) {
     if (orientation === constants.ORIENTATIONS.VERTICAL_HEATMAP) return mainModel.weekOfYear(dayNumber);
+    if (orientation === constants.ORIENTATIONS.VERTICAL) return Math.floor((dayNumber - 1) / gridRows);
     return (dayNumber - 1) % gridColumns;
 }
 

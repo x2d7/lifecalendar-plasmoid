@@ -13,5 +13,57 @@
         <entry name="orientation" type="String">
             <default>horizontal</default>
         </entry>
+
+        <entry name="width" type="Int">
+            <default>440</default>
+        </entry>
+
+        <entry name="height" type="Int">
+            <default>140</default>
+        </entry>
+
+        <entry name="margin" type="Int">
+            <default>6</default>
+        </entry>
+
+        <entry name="gap" type="Int">
+            <default>2</default>
+        </entry>
+
+        <entry name="backgroundRadius" type="Int">
+            <default>4</default>
+        </entry>
+
+        <entry name="cellRadiusFactor" type="Double">
+            <default>0.15</default>
+        </entry>
+
+        <entry name="cellBorderWidth" type="Int">
+            <default>0</default>
+        </entry>
+
+        <entry name="updateInterval" type="Int">
+            <default>86400000</default>
+        </entry>
+
+        <entry name="useCustomColors" type="Bool">
+            <default>false</default>
+        </entry>
+
+        <entry name="filledColor" type="Color">
+            <default>#3daee9</default>
+        </entry>
+
+        <entry name="emptyColor" type="Color">
+            <default>#bfbfbf</default>
+        </entry>
+
+        <entry name="todayBorderColor" type="Color">
+            <default>#3daee9</default>
+        </entry>
+
+        <entry name="backgroundColor" type="Color">
+            <default>#00000000</default>
+        </entry>
     </group>
 </kcfg>
