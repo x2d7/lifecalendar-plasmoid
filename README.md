@@ -45,8 +45,30 @@ Note that the plasmoid may experience significant lag when dragging (It's my fir
 
 ## Configuration
 
-- Adjust `orientation` (horizontal, vertical, vertical-heatmap)  
-- Adjust `maxSquare` for cell size  
-- Colors follow your Plasma theme  
+The plasmoid offers extensive customization options to fit your preferences:
+
+### Layout & Size
+- **orientation**: Layout mode (horizontal, vertical, vertical-heatmap)
+- **maxSquare**: Maximum cell size in pixels
+
+### Spacing & Appearance
+- **gap**: Spacing between cells in pixels
+- **backgroundRadius**: Corner radius of the widget background 
+
+### Cell Styling
+- **cellRadiusFactor**: Corner radius factor for cells
+- **cellBorderWidth**: Border width for cells in pixels
+
+### Update Settings
+- **updateInterval**: How often to refresh the calendar (hourly, daily, weekly, monthly)
+
+### Colors
+- **useCustomColors**: Enable custom color scheme
+- **filledColor**: Color for passed days
+- **emptyColor**: Color for remaining days
+- **todayBorderColor**: Color for today's border
+- **backgroundColor**: Widget background color
+
+When `useCustomColors` is disabled, colors automatically follow your Plasma theme.
 
 ---
