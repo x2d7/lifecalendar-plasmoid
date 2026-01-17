@@ -126,8 +126,8 @@ PlasmoidItem {
                             delegate: Rectangle {
                                 property int dayNumber: index + 1
 
-                                readonly property int cellRow: GridCalculator.getCellRow(dayNumber, gridColumns, orientation, Constants, MainModel)
-                                readonly property int cellCol: GridCalculator.getCellCol(dayNumber, gridColumns, orientation, Constants, MainModel)
+                                readonly property int cellRow: GridCalculator.getCellRow(dayNumber, gridColumns, gridRows, orientation, Constants, MainModel)
+                                readonly property int cellCol: GridCalculator.getCellCol(dayNumber, gridColumns, gridRows, orientation, Constants, MainModel)
 
                                 width: cellSize
                                 height: cellSize
