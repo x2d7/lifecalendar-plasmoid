@@ -65,5 +65,9 @@
         <entry name="backgroundColor" type="Color">
             <default>#00000000</default>
         </entry>
+        
+        <entry name="customDates" type="String">
+            <default>[]</default>
+        </entry>
     </group>
 </kcfg>
