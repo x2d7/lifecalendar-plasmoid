@@ -25,9 +25,9 @@ const MAX_CELL_BORDER_WIDTH = 5;
 
 const UPDATE_INTERVALS = {
     HOURLY: 60 * 60 * 1000,
-    DAILY: 24 * 60 * 60 * 1000,
-    WEEKLY: 7 * 24 * 60 * 60 * 1000,
-    MONTHLY: 30 * 24 * 60 * 60 * 1000
+    TENMINUTES: 10 * 60 * 1000,
+    MINUTELY: 60 * 1000,
+    DAILY: 24 * 60 * 60 * 1000
 };
 
 const ORIENTATIONS = {

@@ -129,16 +129,16 @@ Kirigami.Page {
             id: updateIntervalCombo
             Kirigami.FormData.label: qsTr("Update interval")
             model: [
-                qsTr("Hourly"),
-                qsTr("Daily"),
-                qsTr("Weekly"),
-                qsTr("Monthly")
+                qsTr("Every Minute"),
+                qsTr("Every Ten Minutes"),
+                qsTr("Every Hour"),
+                qsTr("Every Day")
             ]
             property var intervals: [
+                Constants.UPDATE_INTERVALS.MINUTELY,
+                Constants.UPDATE_INTERVALS.TENMINUTES,
                 Constants.UPDATE_INTERVALS.HOURLY,
-                Constants.UPDATE_INTERVALS.DAILY,
-                Constants.UPDATE_INTERVALS.WEEKLY,
-                Constants.UPDATE_INTERVALS.MONTHLY
+                Constants.UPDATE_INTERVALS.DAILY
             ]
 
             Component.onCompleted: {
