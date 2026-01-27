@@ -24,3 +24,15 @@ function weekOfYear(dayNumber, year) {
     const weekNumber = Math.floor((daysSinceJan1 + jan1DayOfWeek) / 7) + 1;
     return weekNumber;
 }
+
+function getDateFromDayOfYear(dayOfYear) {
+    var date = new Date();
+    date.setMonth(0);
+    date.setDate(dayOfYear);
+    
+    return {
+        day: date.getDate(),
+        month: date.getMonth() + 1,
+        year: date.getFullYear()
+    };
+}

@@ -31,7 +31,7 @@ PlasmoidItem {
     property color filledColor: ThemeManager.getFilledColor(PlasmaCore.Theme)
     property color emptyColor: ThemeManager.getEmptyColor(PlasmaCore.Theme)
     property color todayBorderColor: ThemeManager.getTodayBorder(PlasmaCore.Theme)
-    property color bgColor: ThemeManager.getBackground(PlasmaCore.Theme)
+    property color backgroundColor: ThemeManager.getBackground(PlasmaCore.Theme)
 
     property int updateTrigger: 0
     property int totalDays: { updateTrigger; MainModel.daysInYear() }
@@ -44,21 +44,50 @@ PlasmoidItem {
     property int gridRows: GridCalculator.calculateGridRows(totalDays, gridColumns, orientation, Constants)
 
     property real cellSize: GridCalculator.calculateCellSize(availableWidth, availableHeight, gridColumns, gridRows, gap, maxSquare)
+    
+    property string cfg_customDates: "[]"
+    property var customDates: []
+    property string cfg_customDatesDefault: "[]"
 
     onUseCustomColorsChanged: updateColors()
     onWidthChanged: plasmoid.configuration.width = width
     onHeightChanged: plasmoid.configuration.height = height
+    
+    function updateCustomDates() {
+        try {
+            customDates = JSON.parse(cfg_customDates)
+        } catch (e) {
+            console.error("Error parsing custom dates:", e)
+            customDates = []
+        }
+    }
+    
+    function getCustomDateInfo(dayOfYear) {
+        if (!customDates || customDates.length === 0) return null;
+        
+        var dateInfo = MainModel.getDateFromDayOfYear(dayOfYear);
+        if (!dateInfo) return null;
+        
+        for (var i = 0; i < customDates.length; i++) {
+            var customDate = customDates[i];
+            if (customDate.day === dateInfo.day && customDate.month === dateInfo.month) {
+                return customDate;
+            }
+        }
+        return null;
+    }
 
     function updateColors() {
         filledColor = ThemeManager.getFilledColor(PlasmaCore.Theme, plasmoid.configuration.filledColor, useCustomColors)
         emptyColor = ThemeManager.getEmptyColor(PlasmaCore.Theme, plasmoid.configuration.emptyColor, useCustomColors)
         todayBorderColor = ThemeManager.getTodayBorder(PlasmaCore.Theme, plasmoid.configuration.todayBorderColor, useCustomColors)
-        bgColor = ThemeManager.getBackground(PlasmaCore.Theme, plasmoid.configuration.backgroundColor, useCustomColors)
+        backgroundColor = ThemeManager.getBackground(PlasmaCore.Theme, plasmoid.configuration.backgroundColor, useCustomColors)
     }
 
     Component.onCompleted: {
         ConfigHandler.initializeConfig(root, plasmoid, Constants)
         updateColors()
+        updateCustomDates()
     }
 
     Connections {
@@ -78,6 +107,10 @@ PlasmoidItem {
         onEmptyColorChanged: updateColors()
         onTodayBorderColorChanged: updateColors()
         onBackgroundColorChanged: updateColors()
+        onCustomDatesChanged: {
+            cfg_customDates = plasmoid.configuration.customDates
+            updateCustomDates()
+        }
     }
 
     Timer {
@@ -87,6 +120,7 @@ PlasmoidItem {
         interval: updateInterval
         onTriggered: {
             updateTrigger++
+            updateCustomDates()
         }
     }
 
@@ -95,7 +129,7 @@ PlasmoidItem {
 
         Rectangle {
             anchors.fill: parent
-            color: bgColor
+            color: backgroundColor
             radius: backgroundRadius
 
             ColumnLayout {
@@ -136,9 +170,26 @@ PlasmoidItem {
                                 radius: Math.max(1, Math.floor(cellSize * cellRadiusFactor))
                                 property bool passed: GridCalculator.isDayPassed(dayNumber, todayIndex, orientation, cellRow, cellCol, gridRows, gridColumns, Constants)
                                 property bool isToday: dayNumber === todayIndex
+                                
+                                property var customDateInfo: getCustomDateInfo(dayNumber)
+                                property bool hasCustomDate: customDateInfo !== null
+                                
                                 color: passed ? filledColor : emptyColor
                                 border.width: cellBorderWidth
-                                border.color: isToday ? todayBorderColor : "transparent"
+                                border.color: hasCustomDate ? customDateInfo.color : (isToday ? todayBorderColor : "transparent")
+                                
+                                ToolTip {
+                                    visible: hasCustomDate && mouseArea.containsMouse
+                                    text: customDateInfo ? customDateInfo.description : ""
+                                    delay: 500
+                                }
+                                
+                                MouseArea {
+                                    id: mouseArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: hasCustomDate ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                }
                             }
                         }
                     }
@@ -146,6 +197,4 @@ PlasmoidItem {
             }
         }
     }
-
-
 }

@@ -47,6 +47,9 @@ function initializeConfig(root, plasmoid, constants) {
         if (plasmoid.configuration.backgroundColor) {
             root.backgroundColor = plasmoid.configuration.backgroundColor;
         }
+         if (plasmoid.configuration.customDates !== undefined) {
+            root.cfg_customDates = plasmoid.configuration.customDates;
+        }
     }
 }
 
@@ -138,4 +141,8 @@ function updateBackgroundColor(root, plasmoid, constants) {
     if (plasmoid && plasmoid.configuration && plasmoid.configuration.backgroundColor !== undefined) {
         root.backgroundColor = plasmoid.configuration.backgroundColor;
     }
+}
+
+function updateCustomDates(root, plasmoid, Constants) {
+    root.cfg_customDates = plasmoid.configuration.customDates;
 }
