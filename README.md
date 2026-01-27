@@ -19,6 +19,7 @@ Note that the plasmoid may experience significant lag when dragging (It's my fir
   <img src="./screenshots/3.png" width="400" style="display: block; flex: 0 0 auto;">
   <img src="./screenshots/1.png" width="400" style="display: block; flex: 0 0 auto;">
   <img src="./screenshots/2.png" width="800" style="display: block; flex: 0 0 auto; margin-top: 0;">
+  <img src="./screenshots/4.png" width="800" style="display: block; flex: 0 0 auto; margin-top: 0;">
 </div>
 
 
