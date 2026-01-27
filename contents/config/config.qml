@@ -6,4 +6,9 @@ ConfigModel {
         icon: "configure"
         source: "configGeneral.qml"
     }
+    ConfigCategory {
+        name: qsTr("Custom Dates")
+        icon: "view-calendar"
+        source: "configCustomDates.qml"
+    }
 }

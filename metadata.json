@@ -33,7 +33,7 @@
   },
   "KPackageStructure": "Plasma/Applet",
   "X-Plasma-API-Minimum-Version": "6.0",
-  "X-Plasma-ConfigUI": "contents/ui/config.qml",
+  "X-Plasma-ConfigUI": "contents/config/config.qml",
   "X-Plasma-ContentRating": "Everyone",
   "X-Plasma-Dependencies": [],
   "X-Plasma-Provides": ["plasmoid", "calendar", "year-progress", "lifestyle-tool"]

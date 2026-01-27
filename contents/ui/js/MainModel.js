@@ -17,3 +17,7 @@ function dayOfWeek(dayNumber) {
 function weekOfYear(dayNumber) {
     return Utils.weekOfYear(dayNumber);
 }
+
+function getDateFromDayOfYear(dayOfYear) {
+    return Utils.getDateFromDayOfYear(dayOfYear);
+}
