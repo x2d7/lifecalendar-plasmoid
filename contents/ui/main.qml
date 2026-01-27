@@ -189,13 +189,6 @@ PlasmoidItem {
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     cursorShape: hasCustomDate ? Qt.PointingHandCursor : Qt.ArrowCursor
-                                    
-                                    onClicked: {
-                                        if (hasCustomDate) {
-                                            // Optional: Add click action for custom dates
-                                            console.log("Custom date clicked:", customDateInfo.description)
-                                        }
-                                    }
                                 }
                             }
                         }
