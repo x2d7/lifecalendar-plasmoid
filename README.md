@@ -32,15 +32,12 @@ Note that the plasmoid may experience significant lag when dragging (It's my fir
 
 ## Installation
 
-1. Clone the repository:  
+1. Open a terminal and run:  
    ```bash
    git clone https://github.com/x2d7/lifecalendar-plasmoid.git
-   ```
-2. Move to Plasma widgets folder:  
-   ```bash
    mv lifecalendar-plasmoid ~/.local/share/plasma/plasmoids/
    ```
-3. Add the plasmoid to your desktop from the **Add Widgets** menu.  
+2. Add the plasmoid to your desktop from the **Add Widgets** menu.  
 
 ---
 
